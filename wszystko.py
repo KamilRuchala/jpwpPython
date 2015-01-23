@@ -3,6 +3,10 @@ import urllib2
 from pyquery import PyQuery
 import re
 from pymongo import MongoClient
+import os
+import ImageChops
+import math, operator
+import Image
 
 
 class Country:
@@ -99,12 +103,25 @@ def dbGetFlagCollection():
 	collection = client.jpwp.flags
 	return collection
 
-def compareImages(link1, link2):
-	urllib.urlretrieve("link1", "1.gif")
-	urllib.urlretrieve("link2", "2.gif")
-	h1 = Image.open("1.gif").histogram()
-	h2 = Image.open("2.gif").histogram()
+def compareImages(link1, link2): # http://effbot.org/zone/pil-comparing-images.htm
+	urllib.urlretrieve(link1, "1.gif")
+	urllib.urlretrieve(link2, "2.gif")
+	im1 = Image.open("1.gif")
+	im2 = Image.open("2.gif")
+	(width, height) = im1.size
+	im2 = im2.resize((width, height), Image.BICUBIC)
+	h = ImageChops.difference(im1, im2).histogram()
 
-	rms = math.sqrt(reduce(operator.add,
-	    map(lambda a,b: (a-b)**2, h1, h2))/len(h1))
+	# calculate rms
+	print math.sqrt(reduce(operator.add,map(lambda h, i: h*(i**2), h, range(256))) / (float(im1.size[0]) * im1.size[1]))
+	myfile1="1.gif"
+	myfile2="2.gif"
+	if os.path.isfile(myfile1):
+        	os.remove(myfile1)
+	else:    ## Show an error ##
+        	return("Error: %s file not found" % myfile1)
+	if os.path.isfile(myfile2):
+        	os.remove(myfile2)
+	else:    ## Show an error ##
+        	return("Error: %s file not found" % myfile2)
  

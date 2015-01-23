@@ -1,12 +1,16 @@
 #http://docs.python-requests.org/en/latest/index.html
+#http://www.travel-images.com/russia.gif
 
 from wszystko import *
 import json
 import ast
 
 #jstring = '{"address": "localhost", "port": "0", "type": "text", "content": "country(russia)"}'
-#jstring = '{"address": "localhost", "port": "0", "type": "text", "content": "checkflag(http://www.mapsofworld.com/flags/england-flag.html)"}'
-#data = json.loads(jstring)
+jstring = '{"address": "localhost", "port": "0", "type": "text", "content": "checkflag(http://www.travel-images.com/germany.gif)"}'
+
+data = json.loads(jstring)
+
+
 
 def odpowiedz(content):
 	#zapytanie = data["content"].split(';')
@@ -65,4 +69,4 @@ def odpowiedz(content):
 		return "bad_query"
 
 
-
+print odpowiedz(data['content'])
