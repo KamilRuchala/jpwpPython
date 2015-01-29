@@ -5,12 +5,6 @@ from wszystko import *
 import json
 import ast
 
-#jstring = '{"address": "localhost", "port": "0", "type": "text", "content": "country(russia)"}'
-jstring = '{"address": "localhost", "port": "0", "type": "text", "content": "checkflag(http://www.travel-images.com/germany.gif)"}'
-
-data = json.loads(jstring)
-
-
 
 def odpowiedz(content):
 	#zapytanie = data["content"].split(';')
@@ -37,16 +31,16 @@ def odpowiedz(content):
 			
 	
 		if len(zapytanie) == 1:
-			return kraj.text
+			return kraj.text.encode('utf8')
 		elif len(zapytanie) == 2:	
 			if re.search(regexp3, zapytanie[1]) != None:
 				tag = re.sub("tag\(", "", zapytanie[1])
 				tag = re.sub("\)", "", tag)
 				aaa = getSentenceWith(kraj.text, tag)
 				str1 = ''.join(aaa)
-				return str1
+				return str1.encode('utf8')
 			elif re.search(regexp4, zapytanie[1]) != None:
-				return kraj.flag_link
+				return kraj.flag_link.encode('utf8')
 			else:
 				return "bad_query"
 		else:
@@ -68,5 +62,3 @@ def odpowiedz(content):
 	else:
 		return "bad_query"
 
-
-print odpowiedz(data['content'])

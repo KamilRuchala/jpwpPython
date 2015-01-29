@@ -32,11 +32,11 @@ def getHtml(country):
         adress = adres + str(country)
         response = urllib2.urlopen(adress)
         html = response.read()
-        pq = PyQuery(html)
+        html1 = re.sub("<!--.*-->", "", html,re.DOTALL)
+        pq = PyQuery(html1)
         tag = pq('div#mw-content-text.mw-content-ltr')
         v = tag.text()
         result1 = re.sub("<.*?>", "", v)
-	result1 = re.sub("NewPP.*", "", result1)
 	f = open('dupa.txt', 'w')
 	result1 = result1.encode('utf-8')
 	f.write(result1)
@@ -108,8 +108,9 @@ def compareImages(link1, link2): # http://effbot.org/zone/pil-comparing-images.h
 	urllib.urlretrieve(link2, "2.gif")
 	im1 = Image.open("1.gif")
 	im2 = Image.open("2.gif")
-	(width, height) = im1.size
-	im2 = im2.resize((width, height), Image.BICUBIC)
+	#(width, height) = im1.size
+	#im2 = im2.resize((width, height), Image.BICUBIC)
+	
 	h = ImageChops.difference(im1, im2).histogram()
 
 	# calculate rms
