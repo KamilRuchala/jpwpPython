@@ -1,11 +1,8 @@
-#http://docs.python-requests.org/en/latest/index.html
-#http://www.travel-images.com/russia.gif
-
 from wszystko import *
 import json
 import ast
 
-
+## funkcja przetwarzajaca dane zapytanie, zwraca odpowiedni wynik
 def odpowiedz(content):
 	#zapytanie = data["content"].split(';')
 	zapytanie = content.split(';')
@@ -23,7 +20,6 @@ def odpowiedz(content):
 			kraj = Country(country, getHtml(country), getCountryFlag(country))
 			flag = Flag(country, kraj.flag_link, '1')
 			dbInsert(kraj)
-			#dbInsertFlag(flag)
 			
 		else:
 			tmp = dbCheck(country)
@@ -46,19 +42,27 @@ def odpowiedz(content):
 		else:
 			return "bad_query"
 
+	#### sekcja przetwarzania obrazow ####
 	elif re.search(regexp2, zapytanie[0]) != None:
 		uri = re.sub("checkflag\(", "", zapytanie[0])
 		uri = re.sub("\)", "", uri)
-		if dbCheckFlag(uri) != None:
+		if dbCheckFlag(uri) != None: # jesli jest link w bazie - zwroc nazwe, nie porownuj
 			tmp = dbCheckFlag(uri)
 			country = tmp['name']
 			return country
-		else:	
+		else:				# jesli nie to porownanie  
 			col = dbGetFlagCollection()
-			size = col.count()
+			size = col.count() 
+			tmpName = None # nazwa kraju z najmniejszym rms
+			tmpRMS = 300 # aktualny najmniejszy RMS
 			for i in xrange(size):
-				tmp = col.find({"original": '1'},{'link':1})[i]
-				compareImages(uri, tmp['link'])
+				tmp = col.find({"original": '1'},{'link':1, 'name' : 1})[i]
+				rms = compareImages(uri, tmp['link'])
+				print tmp['name'] + str(rms)	
+				if rms < tmpRMS:
+					tmpName = tmp['name']
+					tmpRMS = rms
+			return tmpName
 	else:
 		return "bad_query"
 
