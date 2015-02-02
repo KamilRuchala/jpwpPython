@@ -57,7 +57,6 @@ def getCountryFlag(country):
 	r = str(requests.get(address).status_code)
 	print r
 	if r == "404":
-		print r
 		return "link niedostepny"
 	else:
 		return address
