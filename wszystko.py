@@ -5,7 +5,7 @@ import re
 from pymongo import MongoClient
 import os
 import ImageChops
-import math, operator
+import math, operator, requests
 import Image
 
 ## Klasa reprezentujaca kraj
@@ -54,7 +54,13 @@ def getHtml(country):
 # @param country nazwa danego kraju 
 def getCountryFlag(country):
         address = "http://www.mapsofworld.com/images/world-countries-flags/"+country+"-flag.gif"
-	return address
+	r = str(requests.get(address).status_code)
+	print r
+	if r == "404":
+		print r
+		return "link niedostepny"
+	else:
+		return address
 
 ## metoda zwracajaca liste zdan z danym slowem
 # @param text sparsowany text danego kraju
