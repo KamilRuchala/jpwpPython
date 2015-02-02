@@ -42,12 +42,12 @@ adres = 'http://en.wikipedia.org/wiki/'
 def getHtml(country):
         adress = adres + str(country)
         response = urllib2.urlopen(adress)
-        html = response.read()
-        html1 = re.sub("<!--.*-->", "", html,re.DOTALL)
+        html1 = response.read()
         pq = PyQuery(html1)
         tag = pq('div#mw-content-text.mw-content-ltr')
         v = tag.text()
-        result1 = re.sub("<.*?>", "", v)
+	html1 = re.sub("<!--.*?-->", "", v) # nie dziala na debianie a powinno http://www.dotnetperls.com/remove-html-tags-python
+        result1 = re.sub("<.*?>", "", html1)
 	return result1
        
 ## metoda zwracajaca link do flagi danego kraju
@@ -122,18 +122,18 @@ def dbGetFlagCollection():
 # @param link1 link nr 1 do porownania
 # @param link2 link nr 2 do porownania
 def compareImages(link1, link2):
-	urllib.urlretrieve(link1, "1.gif")
-	urllib.urlretrieve(link2, "2.gif")
-	im1 = Image.open("1.gif")
-	im2 = Image.open("2.gif")
+	urllib.urlretrieve(link1, "1")
+	urllib.urlretrieve(link2, "2")
+	im1 = Image.open("1")
+	im2 = Image.open("2")
 
 	h = ImageChops.difference(im1, im2).histogram()
 
 	# calculate rms
 	rms = math.sqrt(reduce(operator.add,map(lambda h, i: h*(i**2), h, range(256))) / (float(im1.size[0]) * im1.size[1]))
 
-	myfile1="1.gif"
-	myfile2="2.gif"
+	myfile1="1"
+	myfile2="2"
 	if os.path.isfile(myfile1):
         	os.remove(myfile1)
 	else:    ## Show an error ##
